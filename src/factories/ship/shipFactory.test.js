@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import shipFactory from './ship';
+import shipFactory from './shipFactory';
 
 describe('a Ship factory', () => {
   it('should be defined', () => {
