@@ -4,6 +4,16 @@ module.exports = {
     {
       files: ['src/**/*.test.js'],
       extends: ['plugin:jest/all'],
+      rules: {
+        'jest/prefer-expect-assertions': [
+          'warn',
+          {
+            onlyFunctionsWithAsyncKeyword: true,
+            onlyFunctionsWithExpectInLoop: true,
+            onlyFunctionsWithExpectInCallback: true,
+          },
+        ],
+      },
     },
   ],
   globals: {

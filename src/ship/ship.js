@@ -1,4 +1,8 @@
 const shipFactory = (length) => {
+  if (typeof length !== 'number') {
+    throw new Error('Error: Argument provided was not a number');
+  }
+
   let numberOfHits = 0;
 
   const hit = () => {
@@ -6,7 +10,6 @@ const shipFactory = (length) => {
   };
 
   const isSunk = () => numberOfHits >= length;
-
   const getNumberOfHits = () => numberOfHits;
 
   return {
