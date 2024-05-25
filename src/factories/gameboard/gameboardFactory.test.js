@@ -1,12 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
-import gameboardFactory from './gameboardFactory';
+import GameboardFactory from './GameboardFactory';
 
 describe('a Gameboard factory', () => {
-  it('is defined', () => expect(gameboardFactory).toBeDefined());
+  it('is defined', () => expect(GameboardFactory).toBeDefined());
 
   describe('that has a method to place ships (calling the ship factory) in the board', () => {
     it('should place ships at specific coordinates horizontally', () => {
-      const gameboard = gameboardFactory();
+      const gameboard = GameboardFactory();
       const { ship } = gameboard.createShipFn({ length: 3 });
       const mockInsertObj = {
         coordinates: [1, 2],

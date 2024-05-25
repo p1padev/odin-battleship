@@ -1,11 +1,11 @@
 import pipeline from '../../helper';
-import shipFactory from '../ship/shipFactory';
+import ShipFactory from '../ship/ShipFactory';
 
-const gameboardFactory = () => {
+const GameboardFactory = () => {
   const board = Array.from({ length: 10 }, () => Array(10).fill(null));
 
   const createShipFn = ({ length, ...args }) => {
-    const ship = shipFactory(length);
+    const ship = ShipFactory(length);
 
     return { ship, ...args };
   };
@@ -36,4 +36,4 @@ const gameboardFactory = () => {
   };
 };
 
-export default gameboardFactory;
+export default GameboardFactory;

@@ -1,4 +1,4 @@
-const shipFactory = (length) => {
+const ShipFactory = (length) => {
   if (typeof length !== 'number') {
     throw new Error('Error: Argument provided was not a number');
   }
@@ -20,4 +20,4 @@ const shipFactory = (length) => {
   };
 };
 
-export default shipFactory;
+export default ShipFactory;
