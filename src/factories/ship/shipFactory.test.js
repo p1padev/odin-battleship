@@ -1,14 +1,21 @@
-import { describe, expect, it } from '@jest/globals';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import ShipFactory from './ShipFactory';
 
 describe('a Ship factory', () => {
-  it('should be defined', () => {
-    expect(ShipFactory(3)).toBeDefined();
+  let mockShip;
+  let mockShip2;
+
+  beforeEach(() => {
+    mockShip = ShipFactory(3);
+    mockShip2 = ShipFactory(2);
   });
+
+  it('should be defined', () => {
+    expect(mockShip).toBeDefined();
+  });
+
   describe('with a length property that', () => {
     it('should equal to the argument passed during initialization', () => {
-      const mockShip = ShipFactory(3);
-      const mockShip2 = ShipFactory(2);
       // eslint-disable-next-line jest/prefer-to-have-length
       expect(mockShip.length).toBe(3);
       // eslint-disable-next-line jest/prefer-to-have-length
@@ -26,7 +33,6 @@ describe('a Ship factory', () => {
   });
 
   it("should have a isSunk boolean property that equals to true after ship getting hitted more times than it's length", () => {
-    const mockShip = ShipFactory(3);
     mockShip.hit();
     mockShip.hit();
     expect(mockShip.isSunk()).toBeFalsy();

@@ -13,6 +13,7 @@ module.exports = {
             onlyFunctionsWithExpectInCallback: true,
           },
         ],
+        'jest/no-hooks': ['off'],
       },
     },
   ],
