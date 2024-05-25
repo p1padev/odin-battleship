@@ -1,42 +1,31 @@
 import { describe, expect, it } from '@jest/globals';
-import shipFactory from '../ship/shipFactory';
+import gameboardFactory from './gameboardFactory';
 
 describe('a Gameboard factory', () => {
-  it('is defined', () => expect(gameboardFactory()).toBeDefined());
+  it('is defined', () => expect(gameboardFactory).toBeDefined());
 
   describe('that has a method to place ships (calling the ship factory) in the board', () => {
     it('should place ships at specific coordinates horizontally', () => {
       const gameboard = gameboardFactory();
-      const mockShip = shipFactory(3);
-
-      gameboard.insertShip({
+      const { ship } = gameboard.createShipFn({ length: 3 });
+      const mockInsertObj = {
         coordinates: [1, 2],
-        length: 3,
+        ship,
         isVertical: false,
-      });
+      };
+
+      gameboard.insertShipFn(mockInsertObj);
 
       expect(gameboard.board[1][1]).toBeNull();
-      expect(gameboard.board[1][2]).toBe(mockShip);
-      expect(gameboard.board[1][3]).toBe(mockShip);
-      expect(gameboard.board[1][4]).toBe(mockShip);
+      expect(gameboard.board[1][2]).toStrictEqual(ship);
+      expect(gameboard.board[1][3]).toStrictEqual(ship);
+      expect(gameboard.board[1][4]).toStrictEqual(ship);
       expect(gameboard.board[1][5]).toBeNull();
     });
-    it.todo('should place ships at specific coordinates vertically', () => {
-      const gameboard = gameboardFactory();
-
-      gameboard.insertShip({
-        coordinates: [1, 2],
-        length: 3,
-        isVertical: true,
-      });
-    });
-    it.todo('should throw error if coordinates are out of the board', () => {});
-    it.todo(
-      'should throw error if coordinates overlap a ship already placed',
-      () => {}
-    );
+    it.todo('should place ships at specific coordinates vertically');
+    it.todo('should throw error if coordinates are out of the board');
+    it.todo('should throw error if coordinates overlap a ship already placed');
   });
-  it.todo('works');
 });
 
 /*
