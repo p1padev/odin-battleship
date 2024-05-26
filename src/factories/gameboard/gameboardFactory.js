@@ -2,20 +2,54 @@ import pipeline from '../../helper';
 
 const GameboardFactory = () => {
   const board = Array.from({ length: 10 }, () => Array(10).fill(null));
+  const missedShotsCoords = [];
+  const placedShipsCoords = [];
+
+  const getMissedShots = () => missedShotsCoords;
+
+  const areAllShipsSunk = () =>
+    placedShipsCoords.length > 0 &&
+    placedShipsCoords.every(([shipXCoord, shipYCoord]) =>
+      board[shipXCoord][shipYCoord].isSunk()
+    );
+
+  const isValidCoordinate = (coord) => coord >= 0 && coord <= 9;
 
   const checkBoundariesFn = ({
     coordinates: [coordXAxis, coordYAxis],
     ...args
   }) => {
-    if (
-      coordXAxis >= 0 &&
-      coordXAxis <= 9 &&
-      coordYAxis >= 0 &&
-      coordYAxis <= 9
-    ) {
+    if (isValidCoordinate(coordXAxis) && isValidCoordinate(coordYAxis)) {
       return { coordXAxis, coordYAxis, ...args };
     }
-    throw new Error('Out of boundaries');
+    throw new Error('Invalid coordinates');
+  };
+
+  const receiveAttack = (coordinates = []) => {
+    checkBoundariesFn({ coordinates });
+
+    const [xAxisCoord, yAxisCoord] = coordinates;
+    const ship = board[xAxisCoord][yAxisCoord];
+    if (ship !== null) {
+      ship.hit();
+      return ship;
+    }
+
+    missedShotsCoords.push(coordinates);
+    return missedShotsCoords;
+  };
+
+  const checkProvidedObjFn = (initialObj) => {
+    const requiredKeys = ['coordinates', 'ship', 'isVertical'];
+    const existingKeys = Object.keys(initialObj);
+
+    requiredKeys.forEach((key) => {
+      if (!existingKeys.includes(key)) {
+        throw new Error('Missing required arguments');
+      }
+    });
+
+    return initialObj;
   };
 
   const organizeIndicesFn = ({
@@ -51,12 +85,14 @@ const GameboardFactory = () => {
   };
 
   const insertShipFn = ({ indicesForInsertion, ship }) => {
-    indicesForInsertion.forEach(([boardXAxis, boardYAxis]) => {
-      board[boardXAxis][boardYAxis] = ship;
+    indicesForInsertion.forEach(([shipXAxis, shipYAxis]) => {
+      board[shipXAxis][shipYAxis] = ship;
+      placedShipsCoords.push([shipXAxis, shipYAxis]);
     });
   };
 
   const insertShip = pipeline(
+    checkProvidedObjFn,
     checkBoundariesFn,
     organizeIndicesFn,
     checkOverlappingFn,
@@ -64,8 +100,11 @@ const GameboardFactory = () => {
   );
 
   return {
+    areAllShipsSunk,
     board,
+    getMissedShots,
     insertShip,
+    receiveAttack,
   };
 };
 

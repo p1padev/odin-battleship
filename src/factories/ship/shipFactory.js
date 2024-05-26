@@ -9,10 +9,13 @@ const ShipFactory = (length) => {
     numberOfHits += 1;
   };
 
+  const getNumberOfHits = () => numberOfHits;
+
   const isSunk = () => numberOfHits >= length;
 
   return {
     length,
+    getNumberOfHits,
     isSunk,
     hit,
   };

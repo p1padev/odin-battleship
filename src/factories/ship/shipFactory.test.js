@@ -10,10 +10,6 @@ describe('a Ship factory', () => {
     mockShip2 = ShipFactory(2);
   });
 
-  it('should be defined', () => {
-    expect(mockShip).toBeDefined();
-  });
-
   describe('with a length property that', () => {
     it('should equal to the argument passed during initialization', () => {
       // eslint-disable-next-line jest/prefer-to-have-length
@@ -30,6 +26,12 @@ describe('a Ship factory', () => {
         new Error('Error: Argument provided was not a number')
       );
     });
+  });
+
+  it('should have a numberOfHits property that changes when hit method is called', () => {
+    expect(mockShip.getNumberOfHits()).toBe(0);
+    mockShip.hit();
+    expect(mockShip.getNumberOfHits()).toBe(1);
   });
 
   it("should have a isSunk boolean property that equals to true after ship getting hitted more times than it's length", () => {

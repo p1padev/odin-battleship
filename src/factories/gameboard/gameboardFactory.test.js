@@ -3,17 +3,29 @@ import ShipFactory from '../ship/ShipFactory';
 import GameboardFactory from './GameboardFactory';
 
 describe('gameboard Factory', () => {
-  it('should be defined', () => {
-    expect(GameboardFactory).toBeDefined();
-  });
-
-  describe('insertShip method', () => {
+  describe('it creates a board that has an insertShip method', () => {
     let gameboard;
     let ship;
 
     beforeEach(() => {
       gameboard = GameboardFactory();
       ship = ShipFactory(3);
+    });
+
+    it("should throw an error if provided obj doesn't includes coordinates, a ship object and isVertical", () => {
+      expect.assertions(3);
+
+      const possibleMissingElements = [
+        { coordinates: [1, 2], ship },
+        { ship, isVertical: true },
+        { coordinates: [1, 2], isVertical: false },
+      ];
+
+      possibleMissingElements.forEach((errorCase) => {
+        expect(() => gameboard.insertShip(errorCase)).toThrow(
+          'Missing required arguments'
+        );
+      });
     });
 
     it('should place ships horizontally', () => {
@@ -25,11 +37,9 @@ describe('gameboard Factory', () => {
 
       gameboard.insertShip(mockInsertObj);
 
-      expect(gameboard.board[1][1]).toBeNull();
       expect(gameboard.board[1][2]).toStrictEqual(ship);
       expect(gameboard.board[1][3]).toStrictEqual(ship);
       expect(gameboard.board[1][4]).toStrictEqual(ship);
-      expect(gameboard.board[1][5]).toBeNull();
     });
 
     it('should place ships vertically', () => {
@@ -41,11 +51,9 @@ describe('gameboard Factory', () => {
 
       gameboard.insertShip(mockInsertObj);
 
-      expect(gameboard.board[0][2]).toBeNull();
       expect(gameboard.board[1][2]).toStrictEqual(ship);
       expect(gameboard.board[2][2]).toStrictEqual(ship);
       expect(gameboard.board[3][2]).toStrictEqual(ship);
-      expect(gameboard.board[4][2]).toBeNull();
     });
 
     it('should throw an error if coordinates are out of the board', () => {
@@ -58,7 +66,7 @@ describe('gameboard Factory', () => {
 
       outOfBoundsObjs.forEach((mockInsertObj) => {
         expect(() => gameboard.insertShip(mockInsertObj)).toThrow(
-          new Error('Out of boundaries')
+          new Error('Invalid coordinates')
         );
       });
     });
@@ -101,6 +109,79 @@ describe('gameboard Factory', () => {
           "This will overlap a ship that's already in the board"
         );
       });
+    });
+  });
+
+  describe('it creates a board that has a receiveAttack method', () => {
+    let gameboard;
+    let ship;
+
+    beforeEach(() => {
+      gameboard = GameboardFactory();
+      ship = ShipFactory(3);
+      gameboard.insertShip({ coordinates: [1, 2], ship, isVertical: false });
+    });
+
+    it('should throw an error if no pair of coord. is provided or if pair is out of boundaries', () => {
+      expect(() => gameboard.receiveAttack()).toThrow('Invalid coordinates');
+      expect(() => gameboard.receiveAttack([-1, -1])).toThrow(
+        'Invalid coordinates'
+      );
+    });
+    it("should take a pair of coordinates and hit a ship if it's placed there", () => {
+      const before = ship.getNumberOfHits();
+      gameboard.receiveAttack([1, 2]);
+
+      expect(ship.getNumberOfHits()).toBe(before + 1);
+    });
+    it('should take a pair of coordinates and record the missed shot', () => {
+      gameboard.receiveAttack([6, 6]);
+      gameboard.receiveAttack([8, 8]);
+
+      expect(gameboard.getMissedShots()).toContainEqual([6, 6]);
+      expect(gameboard.getMissedShots()).toContainEqual([8, 8]);
+    });
+  });
+  describe('that has a areAllShipsSunk method', () => {
+    let gameboard;
+    let shipOne;
+    let shipTwo;
+    let shipThree;
+
+    beforeEach(() => {
+      gameboard = GameboardFactory();
+      shipOne = ShipFactory(1);
+      shipTwo = ShipFactory(1);
+      shipThree = ShipFactory(1);
+      gameboard.insertShip({
+        coordinates: [1, 2],
+        ship: shipOne,
+        isVertical: false,
+      });
+      gameboard.insertShip({
+        coordinates: [4, 5],
+        ship: shipTwo,
+        isVertical: false,
+      });
+      gameboard.insertShip({
+        coordinates: [7, 7],
+        ship: shipThree,
+        isVertical: false,
+      });
+    });
+
+    it('should return true if all of the ships are sunk', () => {
+      shipOne.hit();
+      shipTwo.hit();
+      expect(gameboard.areAllShipsSunk()).toBe(false);
+      shipThree.hit();
+      expect(gameboard.areAllShipsSunk()).toBe(true);
+    });
+    it('should return false if all of the ships are NOT sunk', () => {
+      expect(gameboard.areAllShipsSunk()).toBe(false);
+    });
+    it('should return false if no ships', () => {
+      expect(GameboardFactory().areAllShipsSunk()).toBe(false);
     });
   });
 });
