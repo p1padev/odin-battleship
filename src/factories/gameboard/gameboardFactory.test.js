@@ -124,24 +124,24 @@ describe('gameboard Factory', () => {
 
     it('should throw an error if no pair of coord. is provided or if pair is out of boundaries', () => {
       expect(() => gameboard.receiveAttack()).toThrow('Invalid coordinates');
-      expect(() => gameboard.receiveAttack([-1, -1])).toThrow(
+      expect(() => gameboard.receiveAttack({ coordinates: [-1, -1] })).toThrow(
         'Invalid coordinates'
       );
     });
     it("should take a pair of coordinates and hit a ship if it's placed there", () => {
       const before = ship.getNumberOfHits();
-      gameboard.receiveAttack([1, 2]);
+      gameboard.receiveAttack({ coordinates: [1, 2] });
 
       expect(ship.getNumberOfHits()).toBe(before + 1);
     });
     it('an attack in one ship at [x,y] coord should reflect for all positions of the same ship', () => {
-      gameboard.receiveAttack([1, 2]);
+      gameboard.receiveAttack({ coordinates: [1, 2] });
 
       expect(gameboard.getBoard()[1][3].getNumberOfHits()).toBe(1);
     });
     it('should take a pair of coordinates and record the missed shot', () => {
-      gameboard.receiveAttack([6, 6]);
-      gameboard.receiveAttack([8, 8]);
+      gameboard.receiveAttack({ coordinates: [6, 6] });
+      gameboard.receiveAttack({ coordinates: [8, 8] });
 
       expect(gameboard.getMissedShots()).toContainEqual([6, 6]);
       expect(gameboard.getMissedShots()).toContainEqual([8, 8]);

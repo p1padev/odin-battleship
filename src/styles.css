@@ -113,4 +113,9 @@ footer a:hover {
 .board-cell {
   border: 1px solid black;
   aspect-ratio: 1;
+  cursor: pointer;
+}
+
+.board-cell:hover {
+  background-color: var(--color-accent);
 }

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import App from './app/app';
+import App from './app/App';
 import reset from './reset.css';
 import styles from './styles.css';
 

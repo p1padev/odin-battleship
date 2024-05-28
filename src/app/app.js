@@ -1,3 +1,4 @@
+import insertMissedShots from '../dom/insertMissedShots';
 import insertPlayerBoard from '../dom/insertPlayerBoard';
 import insertShips from '../dom/insertShips';
 import PlayerFactory from '../factories/player/Player';
@@ -29,6 +30,7 @@ const App = () => {
   fakeInsertPlayerTwo.forEach((insert) => {
     players[1].getController().insertShip(insert);
   });
+  players[0].getController().receiveAttack([1, 1]);
 
   const togglePlayerTurn = () => {};
 
@@ -44,6 +46,7 @@ const App = () => {
       insertPlayerBoard(player);
     });
     insertShips(players[0]);
+    insertMissedShots(players[0]);
   };
 
   return {
