@@ -17,8 +17,9 @@ module.exports = {
       },
     },
   ],
-  globals: {
-    browser: 'readonly',
+  env: {
+    browser: true,
+    node: true,
   },
   parserOptions: {
     ecmaVersion: 'latest',
