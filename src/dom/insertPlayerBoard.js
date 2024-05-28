@@ -1,7 +1,7 @@
 import boardComponent from '../components/boardComponent';
 
-const insertPlayerBoard = (DOMElement, playerBoard) => {
-  DOMElement.appendChild(boardComponent(playerBoard));
+const insertPlayerBoard = (player) => {
+  player.getDOMBoardRef().appendChild(boardComponent(player.getBoard()));
 };
 
 export default insertPlayerBoard;

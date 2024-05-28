@@ -41,7 +41,7 @@ const App = () => {
         `.player-${index}-container`
       );
       player.setDOMBoardRef(boardContainer);
-      insertPlayerBoard(boardContainer, player.getBoard());
+      insertPlayerBoard(player);
     });
     insertShips(players[0]);
   };
