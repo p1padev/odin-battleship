@@ -25,9 +25,11 @@ describe('a Player factory', () => {
     insertExpectedBoard.insertShip(fakeInsert);
     playerWithInsertion.getController().insertShip(fakeInsert);
 
-    expect(PlayerFactory().getBoard()).toStrictEqual(emptyExpectedBoard.board);
+    expect(PlayerFactory().getBoard()).toStrictEqual(
+      emptyExpectedBoard.getBoard()
+    );
     expect(playerWithInsertion.getBoard()).toStrictEqual(
-      insertExpectedBoard.board
+      insertExpectedBoard.getBoard()
     );
   });
 });

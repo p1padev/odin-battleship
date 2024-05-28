@@ -37,9 +37,9 @@ describe('gameboard Factory', () => {
 
       gameboard.insertShip(mockInsertObj);
 
-      expect(gameboard.board[1][2]).toStrictEqual(ship);
-      expect(gameboard.board[1][3]).toStrictEqual(ship);
-      expect(gameboard.board[1][4]).toStrictEqual(ship);
+      expect(gameboard.getBoard()[1][2]).toStrictEqual(ship);
+      expect(gameboard.getBoard()[1][3]).toStrictEqual(ship);
+      expect(gameboard.getBoard()[1][4]).toStrictEqual(ship);
     });
 
     it('should place ships vertically', () => {
@@ -51,9 +51,9 @@ describe('gameboard Factory', () => {
 
       gameboard.insertShip(mockInsertObj);
 
-      expect(gameboard.board[1][2]).toStrictEqual(ship);
-      expect(gameboard.board[2][2]).toStrictEqual(ship);
-      expect(gameboard.board[3][2]).toStrictEqual(ship);
+      expect(gameboard.getBoard()[1][2]).toStrictEqual(ship);
+      expect(gameboard.getBoard()[2][2]).toStrictEqual(ship);
+      expect(gameboard.getBoard()[3][2]).toStrictEqual(ship);
     });
 
     it('should throw an error if coordinates are out of the board', () => {
@@ -133,6 +133,11 @@ describe('gameboard Factory', () => {
       gameboard.receiveAttack([1, 2]);
 
       expect(ship.getNumberOfHits()).toBe(before + 1);
+    });
+    it('an attack in one ship at [x,y] coord should reflect for all positions of the same ship', () => {
+      gameboard.receiveAttack([1, 2]);
+
+      expect(gameboard.getBoard()[1][3].getNumberOfHits()).toBe(1);
     });
     it('should take a pair of coordinates and record the missed shot', () => {
       gameboard.receiveAttack([6, 6]);

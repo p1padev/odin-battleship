@@ -4,16 +4,23 @@ const PlayerFactory = ({
   playerName = 'Anonymous',
   isComputer = false,
 } = {}) => {
+  let DOMBoardRef;
+
   const boardController = GameboardFactory();
-  const { board } = boardController;
   const getName = () => (isComputer ? 'Computer' : playerName);
-  const getBoard = () => board;
+  const getBoard = () => boardController.getBoard();
   const getController = () => boardController;
+  const setDOMBoardRef = (reference) => {
+    DOMBoardRef = reference;
+  };
+  const getDOMBoardRef = () => DOMBoardRef;
 
   return {
     getBoard,
     getController,
     getName,
+    getDOMBoardRef,
+    setDOMBoardRef,
   };
 };
 

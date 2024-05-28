@@ -6,6 +6,8 @@ const GameboardFactory = () => {
   const placedShipsCoords = [];
 
   const getMissedShots = () => missedShotsCoords;
+  const getPlacedShips = () => placedShipsCoords;
+  const getBoard = () => board;
 
   const areAllShipsSunk = () =>
     placedShipsCoords.length > 0 &&
@@ -101,8 +103,9 @@ const GameboardFactory = () => {
 
   return {
     areAllShipsSunk,
-    board,
+    getBoard,
     getMissedShots,
+    getPlacedShips,
     insertShip,
     receiveAttack,
   };
