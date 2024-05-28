@@ -29,11 +29,11 @@ const GameboardFactory = () => {
     const ship = board[coordX][coordY];
     if (ship !== null) {
       ship.hit();
-      return ship;
+      return true;
     }
 
     missedShotsCoords.push([coordX, coordY]);
-    return missedShotsCoords;
+    return false;
   };
 
   const validateInput = (input) => {

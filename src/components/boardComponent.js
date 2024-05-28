@@ -1,12 +1,12 @@
 import cellComponent from './cellComponent';
 
-const boardComponent = (board) => {
+const boardComponent = (player) => {
   const container = document.createElement('div');
   container.classList.add('board-container');
 
-  board.forEach((row, coordX) => {
+  player.getBoard().forEach((row, coordX) => {
     row.forEach((cell, coordY) => {
-      container.appendChild(cellComponent(coordX, coordY));
+      container.appendChild(cellComponent({ coordX, coordY, player }));
     });
   });
 

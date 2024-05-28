@@ -5,6 +5,7 @@
   --color-accent: #ff6f61;
   --color-text: #333333;
   --color-hover: #4b0082;
+  --color-success: #4bb543;
 }
 
 html {
@@ -118,4 +119,13 @@ footer a:hover {
 
 .board-cell:hover {
   background-color: var(--color-accent);
+}
+
+.board-cell.disabled {
+  cursor: not-allowed;
+  background-color: var(--color-accent);
+}
+
+.board-cell.disabled.hittedShip {
+  background-color: var(--color-success);
 }

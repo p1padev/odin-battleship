@@ -1,11 +1,28 @@
-import handleCellClick from '../dom/cellEventListener';
+import handleCellClick from '../dom/handleCellClick';
+import pipeline from '../helper';
 
-const cellComponent = (coordX, coordY) => {
+const getCellComponent = ({ ...args }) => {
   const cell = document.createElement('button');
-  cell.setAttribute('data-coord', `[${coordX},${coordY}]`);
   cell.classList.add('board-cell');
-  cell.addEventListener('click', handleCellClick);
+  return { cell, ...args };
+};
+
+const getPlayerController = ({ player, ...args }) => {
+  const controller = player.getController();
+  return { controller, ...args };
+};
+
+const attachEventListener = ({ cell, ...args }) => {
+  cell.addEventListener('click', () => {
+    handleCellClick({ cell, ...args });
+  });
   return cell;
 };
+
+const cellComponent = pipeline(
+  getCellComponent,
+  getPlayerController,
+  attachEventListener
+);
 
 export default cellComponent;

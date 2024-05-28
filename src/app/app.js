@@ -22,7 +22,12 @@ const fakeInsertPlayerTwo = [
 ];
 
 const App = () => {
-  const players = [PlayerFactory('Test1'), PlayerFactory('Test2')];
+  const players = [
+    PlayerFactory({ playerName: 'Test1', isComputer: false }),
+    PlayerFactory({ playerName: 'Test2', isComputer: false }),
+  ];
+  let playerAttacking = players[0];
+  let playerAwaiting = players[1];
   // FIXME: Temporary
   fakeInsertPlayerOne.forEach((insert) => {
     players[0].getController().insertShip(insert);
@@ -30,9 +35,12 @@ const App = () => {
   fakeInsertPlayerTwo.forEach((insert) => {
     players[1].getController().insertShip(insert);
   });
-  players[0].getController().receiveAttack({ coordinates: [1, 1] });
 
-  const togglePlayerTurn = () => {};
+  const togglePlayerTurn = () => {
+    const temp = playerAttacking;
+    playerAttacking = playerAwaiting;
+    playerAwaiting = temp;
+  };
 
   const init = () => {
     // TODO:  playerOne = PlayerFactory({ playerOneSettings });
@@ -45,8 +53,6 @@ const App = () => {
       player.setDOMBoardRef(boardContainer);
       insertPlayerBoard(player);
     });
-    insertShips(players[0]);
-    insertMissedShots(players[0]);
   };
 
   return {
