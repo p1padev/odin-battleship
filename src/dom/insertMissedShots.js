@@ -6,7 +6,6 @@ const insertMissedShots = (player) => {
     const cell = DOMBoard.querySelector(
       `.board-cell[data-coord="[${coordX},${coordY}]"]`
     );
-
     cell.textContent = 'O';
   });
 };

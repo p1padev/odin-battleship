@@ -30,7 +30,7 @@ const App = () => {
   fakeInsertPlayerTwo.forEach((insert) => {
     players[1].getController().insertShip(insert);
   });
-  players[0].getController().receiveAttack([1, 1]);
+  players[0].getController().receiveAttack({ coordinates: [1, 1] });
 
   const togglePlayerTurn = () => {};
 
