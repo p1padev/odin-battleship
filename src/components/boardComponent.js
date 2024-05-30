@@ -6,11 +6,11 @@ import {
 
 const pickCellComponent = ({
   coordinates,
-  playerController,
-  isEnemy,
+  boardController,
+  isAttacking,
   checkers,
 }) => {
-  const settings = { coordinates, playerController };
+  const settings = { coordinates, boardController };
   const { checkForMissedShot, checkForSuccessfulShot, checkForPlacedShip } =
     checkers;
 
@@ -18,7 +18,7 @@ const pickCellComponent = ({
     settings.missedShot = true;
     return getDisabledCellComponent(settings);
   }
-  if (!isEnemy && checkForPlacedShip(coordinates)) {
+  if (isAttacking && checkForPlacedShip(coordinates)) {
     if (checkForSuccessfulShot(coordinates)) {
       settings.wasShipHitted = true;
     }
@@ -28,9 +28,9 @@ const pickCellComponent = ({
     settings.wasShipHitted = true;
     return getDisabledCellComponent(settings);
   }
-  return isEnemy
-    ? getEnemyCellComponent(settings)
-    : getDisabledCellComponent(settings);
+  return isAttacking
+    ? getDisabledCellComponent(settings)
+    : getEnemyCellComponent(settings);
 };
 
 const containsCoordinates = (containerArray) => (cellCoordinates) =>
@@ -38,25 +38,24 @@ const containsCoordinates = (containerArray) => (cellCoordinates) =>
     coordinates.every((val, index) => val === cellCoordinates[index])
   );
 
-const boardComponent = (player, isEnemy = false) => {
-  const playerController = player.getController();
+const boardComponent = (boardController, isAttacking) => {
   const checkers = {
-    checkForMissedShot: containsCoordinates(playerController.getMissedShots()),
+    checkForMissedShot: containsCoordinates(boardController.getMissedShots()),
     checkForSuccessfulShot: containsCoordinates(
-      playerController.getSuccessfulShots()
+      boardController.getSuccessfulShots()
     ),
-    checkForPlacedShip: containsCoordinates(playerController.getPlacedShips()),
+    checkForPlacedShip: containsCoordinates(boardController.getPlacedShips()),
   };
 
   const container = document.createElement('div');
   container.classList.add('board-container');
 
-  player.getBoard().forEach((row, coordX) => {
+  boardController.getBoard().forEach((row, coordX) => {
     row.forEach((square, coordY) => {
       const cell = pickCellComponent({
         coordinates: [coordX, coordY],
-        playerController,
-        isEnemy,
+        boardController,
+        isAttacking,
         checkers,
       });
       container.appendChild(cell);

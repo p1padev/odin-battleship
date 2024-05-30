@@ -1,4 +1,3 @@
-import insertPlayersBoard from '../dom/insertPlayerBoard';
 import PlayerFactory from '../factories/player/Player';
 import ShipFactory from '../factories/ship/ShipFactory';
 
@@ -44,7 +43,8 @@ const App = () => {
   };
 
   const renderBoards = () => {
-    insertPlayersBoard(playerAttacking, enemyPlayer);
+    playerAttacking.setupBoard(true);
+    enemyPlayer.setupBoard(false);
   };
 
   const togglePlayerTurn = () => {

@@ -1,3 +1,5 @@
+import boardComponent from '../../components/boardComponent';
+import { clearChildren } from '../../helper';
 import GameboardFactory from '../gameboard/GameboardFactory';
 
 const PlayerFactory = ({
@@ -13,14 +15,20 @@ const PlayerFactory = ({
   const setDOMBoardRef = (reference) => {
     DOMBoardRef = reference;
   };
-  const getDOMBoardRef = () => DOMBoardRef;
+
+  const setupBoard = (isAttacking) => {
+    const board = boardComponent(boardController, isAttacking);
+    board.classList.add(isAttacking ? 'player' : 'enemy');
+    clearChildren(DOMBoardRef);
+    DOMBoardRef.appendChild(board);
+  };
 
   return {
     getBoard,
     getController,
     getName,
-    getDOMBoardRef,
     setDOMBoardRef,
+    setupBoard,
   };
 };
 

@@ -2,8 +2,8 @@ import pipeline, { switchTurnEvent } from '../helper';
 
 const gameContainer = document.querySelector('#game-container');
 
-const dispatchAttack = ({ coordinates, playerController, ...args }) => {
-  const wasShipHitted = playerController.receiveAttack({
+const dispatchAttack = ({ coordinates, boardController, ...args }) => {
+  const wasShipHitted = boardController.receiveAttack({
     coordinates,
   });
 

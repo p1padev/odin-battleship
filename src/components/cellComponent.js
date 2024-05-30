@@ -14,9 +14,9 @@ const attachPlayerShip = (cell) => {
   return newCell;
 };
 
-const attachEventListener = ({ coordinates, cell, playerController }) => {
+const attachEventListener = ({ coordinates, cell, boardController }) => {
   cell.addEventListener('click', () => {
-    handleCellClick({ coordinates, cell, playerController });
+    handleCellClick({ coordinates, cell, boardController });
   });
   return cell;
 };
