@@ -2,10 +2,11 @@ import pipeline, { switchTurnEvent } from '../helper';
 
 const gameContainer = document.querySelector('#game-container');
 
-const dispatchAttack = ({ coordX, coordY, controller, ...args }) => {
-  const wasShipHitted = controller.receiveAttack({
-    coordinates: [coordX, coordY],
+const dispatchAttack = ({ coordinates, playerController, ...args }) => {
+  const wasShipHitted = playerController.receiveAttack({
+    coordinates,
   });
+
   return { wasShipHitted, ...args };
 };
 
@@ -14,17 +15,24 @@ const dispatchEvent = ({ ...args }) => {
   return { ...args };
 };
 
-export const updateCell = ({ cell, wasShipHitted = false }) => {
-  // eslint-disable-next-line no-param-reassign
-  cell.disabled = true;
-  cell.classList.add('disabled');
+export const disableCell = ({
+  cell,
+  wasShipHitted = false,
+  missedShot = false,
+}) => {
+  const newCell = cell;
+  newCell.disabled = true;
+  newCell.classList.add('disabled');
   if (wasShipHitted) {
-    // eslint-disable-next-line no-param-reassign
-    cell.textContent = 'X';
-    cell.classList.add('hittedShip');
+    newCell.textContent = 'X';
+    newCell.classList.add('hitted-ship');
   }
+  if (missedShot) {
+    newCell.classList.add('missed-shot');
+  }
+  return newCell;
 };
 
-const handleCellClick = pipeline(dispatchAttack, dispatchEvent, updateCell);
+const handleCellClick = pipeline(dispatchAttack, dispatchEvent, disableCell);
 
 export default handleCellClick;

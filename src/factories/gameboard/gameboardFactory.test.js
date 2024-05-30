@@ -176,10 +176,10 @@ describe('gameboard Factory', () => {
     });
 
     it('should return true if all of the ships are sunk', () => {
-      shipOne.hit();
-      shipTwo.hit();
+      gameboard.receiveAttack({ coordinates: [1, 2] });
+      gameboard.receiveAttack({ coordinates: [4, 5] });
       expect(gameboard.areAllShipsSunk()).toBe(false);
-      shipThree.hit();
+      gameboard.receiveAttack({ coordinates: [7, 7] });
       expect(gameboard.areAllShipsSunk()).toBe(true);
     });
     it('should return false if all of the ships are NOT sunk', () => {
@@ -187,6 +187,39 @@ describe('gameboard Factory', () => {
     });
     it('should return false if no ships', () => {
       expect(GameboardFactory().areAllShipsSunk()).toBe(false);
+    });
+  });
+  describe('that has an getPlacedShips method', () => {
+    const gameboard = GameboardFactory();
+    const ship = ShipFactory(3);
+
+    it('returns an array with coordinates of the placed ship', () => {
+      gameboard.insertShip({ coordinates: [1, 2], ship, isVertical: false });
+      expect(gameboard.getPlacedShips()).toStrictEqual([
+        [1, 2],
+        [1, 3],
+        [1, 4],
+      ]);
+    });
+  });
+  describe('that returns an array of successful shots', () => {
+    const gameboard = GameboardFactory();
+    const ship = ShipFactory(3);
+
+    it('returns an array with coordinates of the placed ship', () => {
+      gameboard.insertShip({ coordinates: [1, 2], ship, isVertical: false });
+      gameboard.receiveAttack({ coordinates: [1, 2] });
+      expect(gameboard.getSuccessfulShots()).toStrictEqual([[1, 2]]);
+    });
+  });
+  describe('that returns an array of missed shots', () => {
+    const gameboard = GameboardFactory();
+    const ship = ShipFactory(3);
+
+    it('returns an array with coordinates of the placed ship', () => {
+      gameboard.insertShip({ coordinates: [1, 2], ship, isVertical: false });
+      gameboard.receiveAttack({ coordinates: [0, 0] });
+      expect(gameboard.getMissedShots()).toStrictEqual([[0, 0]]);
     });
   });
 });

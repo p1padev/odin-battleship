@@ -1,28 +1,41 @@
-import handleCellClick from '../dom/handleCellClick';
+import handleCellClick, { disableCell } from '../dom/handleCellClick';
 import pipeline from '../helper';
 
-const getCellComponent = ({ ...args }) => {
+const createCellComponent = ({ ...args }) => {
   const cell = document.createElement('button');
   cell.classList.add('board-cell');
   return { cell, ...args };
 };
 
-const getPlayerController = ({ player, ...args }) => {
-  const controller = player.getController();
-  return { controller, ...args };
+const attachPlayerShip = (cell) => {
+  const newCell = cell;
+  newCell.textContent = 'S';
+  newCell.classList.add('player-ship');
+  return newCell;
 };
 
-const attachEventListener = ({ cell, ...args }) => {
+const attachEventListener = ({ coordinates, cell, playerController }) => {
   cell.addEventListener('click', () => {
-    handleCellClick({ cell, ...args });
+    handleCellClick({ coordinates, cell, playerController });
   });
   return cell;
 };
 
-const cellComponent = pipeline(
-  getCellComponent,
-  getPlayerController,
+const getShipPlayerCellComponent = pipeline(
+  createCellComponent,
+  disableCell,
+  attachPlayerShip
+);
+
+const getDisabledCellComponent = pipeline(createCellComponent, disableCell);
+
+const getEnemyCellComponent = pipeline(
+  createCellComponent,
   attachEventListener
 );
 
-export default cellComponent;
+export {
+  getDisabledCellComponent,
+  getEnemyCellComponent,
+  getShipPlayerCellComponent,
+};

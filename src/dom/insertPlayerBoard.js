@@ -1,9 +1,17 @@
 import boardComponent from '../components/boardComponent';
+import { clearChildren } from '../helper';
 
-const insertPlayerBoard = (player) => {
-  const board = boardComponent(player);
-  const DOMSelector = player.getDOMBoardRef();
-  DOMSelector.appendChild(board);
+const setupBoard = (player, isEnemy) => {
+  const board = boardComponent(player, isEnemy);
+  board.classList.add(isEnemy ? 'enemy' : 'player');
+  const domSelector = player.getDOMBoardRef();
+  clearChildren(domSelector);
+  domSelector.appendChild(board);
 };
 
-export default insertPlayerBoard;
+const insertPlayersBoard = (playerAttacking, enemyPlayer) => {
+  setupBoard(playerAttacking, false);
+  setupBoard(enemyPlayer, true);
+};
+
+export default insertPlayersBoard;

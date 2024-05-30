@@ -1,6 +1,4 @@
-import insertMissedShots from '../dom/insertMissedShots';
-import insertPlayerBoard from '../dom/insertPlayerBoard';
-import insertShips from '../dom/insertShips';
+import insertPlayersBoard from '../dom/insertPlayerBoard';
 import PlayerFactory from '../factories/player/Player';
 import ShipFactory from '../factories/ship/ShipFactory';
 
@@ -27,7 +25,7 @@ const App = () => {
     PlayerFactory({ playerName: 'Test2', isComputer: false }),
   ];
   let playerAttacking = players[0];
-  let playerAwaiting = players[1];
+  let enemyPlayer = players[1];
   // FIXME: Temporary
   fakeInsertPlayerOne.forEach((insert) => {
     players[0].getController().insertShip(insert);
@@ -36,23 +34,32 @@ const App = () => {
     players[1].getController().insertShip(insert);
   });
 
+  const attachDOMReferences = () => {
+    players.forEach((player, index) => {
+      const boardContainer = gameContainer.querySelector(
+        `.player-${index}-container`
+      );
+      player.setDOMBoardRef(boardContainer);
+    });
+  };
+
+  const renderBoards = () => {
+    insertPlayersBoard(playerAttacking, enemyPlayer);
+  };
+
   const togglePlayerTurn = () => {
     const temp = playerAttacking;
-    playerAttacking = playerAwaiting;
-    playerAwaiting = temp;
+    playerAttacking = enemyPlayer;
+    enemyPlayer = temp;
+    renderBoards();
   };
 
   const init = () => {
     // TODO:  playerOne = PlayerFactory({ playerOneSettings });
     // playerTwo = PlayerFactory({ playerTwoSettings });
     gameContainer.addEventListener('switchTurn', togglePlayerTurn);
-    players.forEach((player, index) => {
-      const boardContainer = gameContainer.querySelector(
-        `.player-${index}-container`
-      );
-      player.setDOMBoardRef(boardContainer);
-      insertPlayerBoard(player);
-    });
+    attachDOMReferences();
+    renderBoards();
   };
 
   return {

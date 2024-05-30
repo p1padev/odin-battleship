@@ -2,9 +2,11 @@ import pipeline from '../../helper';
 
 const GameboardFactory = () => {
   const board = Array.from({ length: 10 }, () => Array(10).fill(null));
+  const successfulShotsCoords = [];
   const missedShotsCoords = [];
   const placedShipsCoords = [];
 
+  const getSuccessfulShots = () => successfulShotsCoords;
   const getMissedShots = () => missedShotsCoords;
   const getPlacedShips = () => placedShipsCoords;
   const getBoard = () => board;
@@ -29,6 +31,7 @@ const GameboardFactory = () => {
     const ship = board[coordX][coordY];
     if (ship !== null) {
       ship.hit();
+      successfulShotsCoords.push([coordX, coordY]);
       return true;
     }
 
@@ -97,6 +100,7 @@ const GameboardFactory = () => {
     getBoard,
     getMissedShots,
     getPlacedShips,
+    getSuccessfulShots,
     insertShip,
     receiveAttack,
   };

@@ -121,11 +121,30 @@ footer a:hover {
   background-color: var(--color-accent);
 }
 
+.player .board-cell:hover:not(.hitted-ship, .missed-shot) {
+  background-color: var(--color-pastel-blue);
+}
+
 .board-cell.disabled {
   cursor: not-allowed;
+}
+
+.enemy .disabled {
   background-color: var(--color-accent);
 }
 
-.board-cell.disabled.hittedShip {
+.player-ship {
+  background-color: var(--color-pastel-blue);
+}
+
+.enemy .hitted-ship {
   background-color: var(--color-success);
+}
+
+.player .hitted-ship {
+  background-color: var(--color-accent);
+}
+
+.player .missed-shot {
+  background-color: var(--color-accent);
 }
