@@ -4,6 +4,8 @@ import {
   getShipPlayerCellComponent,
 } from './cellComponent';
 
+import { containsCoordinates } from '../helper';
+
 const pickCellComponent = ({
   coordinates,
   boardController,
@@ -32,11 +34,6 @@ const pickCellComponent = ({
     ? getDisabledCellComponent(settings)
     : getEnemyCellComponent(settings);
 };
-
-const containsCoordinates = (containerArray) => (cellCoordinates) =>
-  containerArray.some((coordinates) =>
-    coordinates.every((val, index) => val === cellCoordinates[index])
-  );
 
 const boardComponent = (boardController, isAttacking) => {
   const checkers = {

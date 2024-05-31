@@ -13,4 +13,9 @@ export const clearChildren = (element) => {
   }
 };
 
+export const containsCoordinates = (containerArray) => (cellCoordinates) =>
+  containerArray.some((coordinates) =>
+    coordinates.every((val, index) => val === cellCoordinates[index])
+  );
+
 export default pipeline;

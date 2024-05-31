@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 import GameboardFactory from '../gameboard/GameboardFactory';
 import ShipFactory from '../ship/ShipFactory';
-import PlayerFactory from './Player';
+import { ComputerFactory, PlayerFactory } from './PlayerFactory';
 
 describe('a Player factory', () => {
   it('can create a "real" player', () => {
@@ -9,7 +9,7 @@ describe('a Player factory', () => {
     expect(joe.getName()).toBe('Joe');
   });
   it('can create a "computer" player', () => {
-    const pc = PlayerFactory({ isComputer: true });
+    const pc = ComputerFactory();
     expect(pc.getName()).toBe('Computer');
   });
   it('each player should contain its own gameboard', () => {

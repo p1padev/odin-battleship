@@ -1,5 +1,10 @@
-import PlayerFactory from '../factories/player/Player';
+import handleBoard from '../dom/handleBoard';
+import {
+  ComputerFactory,
+  PlayerFactory,
+} from '../factories/player/PlayerFactory';
 import ShipFactory from '../factories/ship/ShipFactory';
+import pipeline from '../helper';
 
 const gameContainer = document.querySelector('#game-container');
 
@@ -20,11 +25,18 @@ const fakeInsertPlayerTwo = [
 
 const App = () => {
   const players = [
-    PlayerFactory({ playerName: 'Test1', isComputer: false }),
-    PlayerFactory({ playerName: 'Test2', isComputer: false }),
+    PlayerFactory({
+      playerName: 'Test1',
+      DOMBoardReference: gameContainer.querySelector(`.player-${0}-container`),
+    }),
+    ComputerFactory({
+      playerName: 'Test2',
+      DOMBoardReference: gameContainer.querySelector(`.player-${1}-container`),
+      enemyDOMBoardReference: gameContainer.querySelector(
+        `.player-${0}-container`
+      ),
+    }),
   ];
-  let playerAttacking = players[0];
-  let enemyPlayer = players[1];
   // FIXME: Temporary
   fakeInsertPlayerOne.forEach((insert) => {
     players[0].getController().insertShip(insert);
@@ -33,32 +45,37 @@ const App = () => {
     players[1].getController().insertShip(insert);
   });
 
-  const attachDOMReferences = () => {
-    players.forEach((player, index) => {
-      const boardContainer = gameContainer.querySelector(
-        `.player-${index}-container`
-      );
-      player.setDOMBoardRef(boardContainer);
+  const renderBoards = () => {
+    players.forEach((player) => {
+      handleBoard(player);
     });
   };
 
-  const renderBoards = () => {
-    playerAttacking.setupBoard(true);
-    enemyPlayer.setupBoard(false);
+  const togglePlayerTurn = () => {
+    players.forEach((player) => {
+      player.toggleIsAttacking();
+    });
   };
 
-  const togglePlayerTurn = () => {
-    const temp = playerAttacking;
-    playerAttacking = enemyPlayer;
-    enemyPlayer = temp;
-    renderBoards();
+  const checkForComputerAttack = () => {
+    players.forEach((player) => {
+      if (player.isComputer() && player.isAttacking()) {
+        setTimeout(() => player.computerAttack(), 1000);
+      }
+    });
   };
+
+  const switchTurnPipeline = pipeline(
+    togglePlayerTurn,
+    renderBoards,
+    checkForComputerAttack
+  );
 
   const init = () => {
     // TODO:  playerOne = PlayerFactory({ playerOneSettings });
     // playerTwo = PlayerFactory({ playerTwoSettings });
-    gameContainer.addEventListener('switchTurn', togglePlayerTurn);
-    attachDOMReferences();
+    gameContainer.addEventListener('switchTurn', switchTurnPipeline);
+    players[0].toggleIsAttacking();
     renderBoards();
   };
 
