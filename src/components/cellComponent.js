@@ -1,10 +1,11 @@
 import handleCellClick, { disableCell } from '../dom/handleCellClick';
 import pipeline from '../helper';
 
-const createCellComponent = ({ ...args }) => {
+const createCellComponent = ({ coordinates, ...args }) => {
   const cell = document.createElement('button');
   cell.classList.add('board-cell');
-  return { cell, ...args };
+  cell.setAttribute('data-coordinates', `[${coordinates}]`);
+  return { cell, coordinates, ...args };
 };
 
 const attachPlayerShip = (cell) => {

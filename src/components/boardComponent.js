@@ -51,7 +51,7 @@ const boardComponent = (boardController, isAttacking) => {
   container.classList.add('board-container');
 
   boardController.getBoard().forEach((row, coordX) => {
-    row.forEach((square, coordY) => {
+    row.forEach((_, coordY) => {
       const cell = pickCellComponent({
         coordinates: [coordX, coordY],
         boardController,
