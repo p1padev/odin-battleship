@@ -129,7 +129,7 @@ footer a:hover {
   cursor: not-allowed;
 }
 
-.enemy .disabled {
+.enemy .missed-shot {
   background-color: var(--color-accent);
 }
 

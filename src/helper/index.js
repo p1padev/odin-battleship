@@ -4,6 +4,7 @@ const pipeline =
     fns.reduce((acc, fn) => fn(acc), value);
 
 export const switchTurnEvent = new Event('switchTurn');
+export const gameEndedEvent = new Event('gameEnded');
 
 export const clearChildren = (element) => {
   if (element) {

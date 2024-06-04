@@ -9,10 +9,13 @@ const pickCell = ({ coordinates, enemyBoard }) => {
 
 const getRandomCoordinates = ({ computerShots, enemyBoard }) => {
   const checkComputerShots = containsCoordinates(computerShots);
-  const checkEnemyCellIsDisabled = (coordinates) => {
+  const checkEnemyCellAlreadyShot = (coordinates) => {
     const cell = pickCell({ coordinates, enemyBoard });
-    return cell.disabled;
+    return cell.classList.contains('missed-shot');
   };
+  if (computerShots.length >= 100) {
+    throw new Error('No more coordinates available');
+  }
 
   const randomCoordinates = [
     Math.floor(Math.random() * 10),
@@ -21,16 +24,17 @@ const getRandomCoordinates = ({ computerShots, enemyBoard }) => {
 
   if (
     checkComputerShots(randomCoordinates) ||
-    checkEnemyCellIsDisabled(randomCoordinates)
+    checkEnemyCellAlreadyShot(randomCoordinates)
   ) {
     return getRandomCoordinates({ computerShots, enemyBoard });
   }
 
+  computerShots.push(randomCoordinates);
   return { coordinates: randomCoordinates, enemyBoard };
 };
 
 const triggerAttack = (cell) => {
-  cell.click();
+  cell.dispatchEvent(new Event('click'));
 };
 
 const computerPlayer = (state) => ({

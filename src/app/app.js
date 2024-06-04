@@ -1,4 +1,5 @@
-import handleBoard from '../dom/handleBoard';
+import renderEnemyBoard from '../dom/renderEnemyBoard';
+import renderPlayerBoard from '../dom/renderPlayerBoard';
 import {
   ComputerFactory,
   PlayerFactory,
@@ -47,7 +48,11 @@ const App = () => {
 
   const renderBoards = () => {
     players.forEach((player) => {
-      handleBoard(player);
+      if (player.isAttacking()) {
+        renderPlayerBoard(player);
+      } else {
+        renderEnemyBoard(player);
+      }
     });
   };
 
@@ -65,17 +70,46 @@ const App = () => {
     });
   };
 
+  const checkWhoWon = () => {
+    let won;
+    let lost;
+    players.forEach((player) => {
+      if (player.getController().areAllShipsSunk()) {
+        lost = player;
+      } else {
+        won = player;
+      }
+    });
+    return { won, lost };
+  };
+
+  const winningMessage = ({ won, lost }) => {
+    alert(`${won.getName()} has won ${lost.getName()}`);
+  };
+
   const switchTurnPipeline = pipeline(
     togglePlayerTurn,
     renderBoards,
     checkForComputerAttack
   );
 
+  const disableSwitchListener = () => {
+    gameContainer.removeEventListener('switchTurn', switchTurnPipeline);
+  };
+
+  const gameEndedPipeline = pipeline(
+    checkWhoWon,
+    winningMessage,
+    disableSwitchListener
+  );
+
   const init = () => {
     // TODO:  playerOne = PlayerFactory({ playerOneSettings });
     // playerTwo = PlayerFactory({ playerTwoSettings });
     gameContainer.addEventListener('switchTurn', switchTurnPipeline);
+    gameContainer.addEventListener('gameEnded', gameEndedPipeline);
     players[0].toggleIsAttacking();
+    players[0].toggleIsFacingComputer();
     renderBoards();
   };
 
