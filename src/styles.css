@@ -72,16 +72,61 @@ footer a:hover {
   text-decoration: underline;
 }
 
+button:not(.board-cell) {
+  height: fit-content;
+  width: fit-content;
+  min-width: 150px;
+  margin: 0 auto;
+  padding: 14px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  appearance: none;
+  border: 1px solid var(--color-white);
+  background-color: var(--color-pastel-blue);
+  transition: all 0.3s ease-in-out;
+  font-size: 18px;
+  color: var(--color-text);
+}
+
+button:not(.board-cell):hover {
+  border-color: var(--color-accent);
+}
+
 #game-container {
   display: grid;
   gap: 30px;
   grid-template-columns: 1fr 1fr;
 }
 
+#game-container.player-initial-form {
+  grid-template-columns: 1fr 150px 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: 'form1 button form2';
+  align-items: center;
+  justify-content: center;
+}
+
+.player-initial-form .player-0-container {
+  grid-area: form1;
+}
+
+.player-initial-form #game-start-btn {
+  grid-area: button;
+}
+
+.player-initial-form .player-1-container {
+  grid-area: form2;
+}
+
 @media screen and (max-width: 1024px) {
   #game-container {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
+  }
+  #game-container.player-initial-form {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 50px 1fr;
+    grid-template-areas: 'form1' 'button' 'form2';
   }
 }
 
@@ -93,6 +138,7 @@ footer a:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .player-name {
@@ -147,4 +193,35 @@ footer a:hover {
 
 .player .missed-shot {
   background-color: var(--color-accent);
+}
+
+.form-player {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+.form-player label,
+.form-player input {
+  display: inline-block;
+}
+
+.form-player div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.form-player label {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.form-player input {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 14px;
 }

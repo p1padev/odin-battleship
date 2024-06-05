@@ -2,34 +2,37 @@ import GameboardFactory from '../gameboard/GameboardFactory';
 import basicPlayer from './basicPlayer';
 import computerPlayer from './computerPlayer';
 
-const createBaseState = (playerName, DOMBoardReference) => ({
+const createBaseState = (playerName, DOMBoard, isFacingComputer) => ({
   playerName,
-  playerBoard: DOMBoardReference,
+  playerBoard: DOMBoard,
   boardController: GameboardFactory(),
   isAttacking: false,
   isComputer: false,
-  isFacingComputer: false,
+  isFacingComputer,
 });
 
 export const PlayerFactory = ({
   playerName = 'Anonymous',
-  DOMBoardReference = null,
+  DOMBoard = null,
+  isFacingComputer = false,
 } = {}) => {
-  const state = createBaseState(playerName, DOMBoardReference);
+  const state = createBaseState(playerName, DOMBoard, isFacingComputer);
   return {
     ...basicPlayer(state),
   };
 };
 
 export const ComputerFactory = ({
-  DOMBoardReference = null,
-  enemyDOMBoardReference = null,
+  playerName = 'Computer',
+  DOMBoard = null,
+  enemyDOMBoard = null,
+  isFacingComputer = false,
 } = {}) => {
   const state = {
-    ...createBaseState('Computer', DOMBoardReference),
+    ...createBaseState(playerName, DOMBoard, isFacingComputer),
     isComputer: true,
     computerShots: [],
-    enemyBoard: enemyDOMBoardReference,
+    enemyBoard: enemyDOMBoard,
   };
   return {
     ...basicPlayer(state),

@@ -9,9 +9,6 @@ const basicPlayer = (state) => ({
   toggleIsAttacking: () => {
     state.isAttacking = !state.isAttacking;
   },
-  toggleIsFacingComputer: () => {
-    state.isFacingComputer = !state.isFacingComputer;
-  },
 });
 
 export default basicPlayer;

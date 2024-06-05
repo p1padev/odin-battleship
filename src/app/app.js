@@ -1,13 +1,12 @@
+import handleInitialForm from '../dom/handleInitialForm';
 import renderEnemyBoard from '../dom/renderEnemyBoard';
 import renderPlayerBoard from '../dom/renderPlayerBoard';
-import {
-  ComputerFactory,
-  PlayerFactory,
-} from '../factories/player/PlayerFactory';
 import ShipFactory from '../factories/ship/ShipFactory';
 import pipeline from '../helper';
+import createPlayers from './createPlayers';
 
 const gameContainer = document.querySelector('#game-container');
+const startButton = document.getElementById('game-start-btn');
 
 // FIXME: Temporary
 
@@ -25,26 +24,7 @@ const fakeInsertPlayerTwo = [
 ];
 
 const App = () => {
-  const players = [
-    PlayerFactory({
-      playerName: 'Test1',
-      DOMBoardReference: gameContainer.querySelector(`.player-${0}-container`),
-    }),
-    ComputerFactory({
-      playerName: 'Test2',
-      DOMBoardReference: gameContainer.querySelector(`.player-${1}-container`),
-      enemyDOMBoardReference: gameContainer.querySelector(
-        `.player-${0}-container`
-      ),
-    }),
-  ];
-  // FIXME: Temporary
-  fakeInsertPlayerOne.forEach((insert) => {
-    players[0].getController().insertShip(insert);
-  });
-  fakeInsertPlayerTwo.forEach((insert) => {
-    players[1].getController().insertShip(insert);
-  });
+  let players;
 
   const renderBoards = () => {
     players.forEach((player) => {
@@ -87,30 +67,52 @@ const App = () => {
     alert(`${won.getName()} has won ${lost.getName()}`);
   };
 
+  const createSetupUI = ({ event, ...args }) => {
+    gameContainer.classList.remove('player-initial-form');
+    event.target.remove();
+    return { ...args };
+  };
+
+  const startSetupMode = (ArrayOfPlayers) => {
+    players = ArrayOfPlayers;
+  };
+
+  const fakeInserts = () => {
+    fakeInsertPlayerOne.forEach((insert) => {
+      players[0].getController().insertShip(insert);
+    });
+    fakeInsertPlayerTwo.forEach((insert) => {
+      players[1].getController().insertShip(insert);
+    });
+    players[0].toggleIsAttacking();
+  };
+
   const switchTurnPipeline = pipeline(
     togglePlayerTurn,
     renderBoards,
     checkForComputerAttack
   );
 
-  const disableSwitchListener = () => {
-    gameContainer.removeEventListener('switchTurn', switchTurnPipeline);
-  };
+  const gameEndedPipeline = pipeline(checkWhoWon, winningMessage);
 
-  const gameEndedPipeline = pipeline(
-    checkWhoWon,
-    winningMessage,
-    disableSwitchListener
+  const enterSetupMode = pipeline(
+    createSetupUI,
+    createPlayers,
+    startSetupMode,
+    fakeInserts,
+    renderBoards,
+    checkForComputerAttack
   );
 
   const init = () => {
-    // TODO:  playerOne = PlayerFactory({ playerOneSettings });
-    // playerTwo = PlayerFactory({ playerTwoSettings });
     gameContainer.addEventListener('switchTurn', switchTurnPipeline);
     gameContainer.addEventListener('gameEnded', gameEndedPipeline);
-    players[0].toggleIsAttacking();
-    players[0].toggleIsFacingComputer();
-    renderBoards();
+    startButton.addEventListener('click', (event) => {
+      const playersForm = handleInitialForm(event);
+      if (playersForm) {
+        enterSetupMode({ event, playersForm });
+      }
+    });
   };
 
   return {

@@ -16,12 +16,57 @@
       <h1>Battleship game</h1>
     </header>
     <main>
-      <div id="game-container">
-        <div class="player-0-container player-container">
-          <h2 class="player-one-name player-name">Test</h2>
+      <div id="game-container" class="player-initial-form">
+        <button id="game-start-btn">Start</button>
+        <div class="player-one-container player-container">
+          <h2 class="player-name">Player 1:</h2>
+          <div class="form-container">
+            <form id="player-1" class="form-player">
+              <div>
+                <label for="player-one-name">Name:</label>
+                <input
+                  type="text"
+                  name="player-name"
+                  id="player-one-name"
+                  placeholder="Joe"
+                  required
+                  maxlength="14"
+                />
+              </div>
+              <div>
+                <label for="computer-checkbox">Computer:</label>
+                <input
+                  type="checkbox"
+                  name="is-computer"
+                  id="computer-checkbox"
+                />
+              </div>
+            </form>
+          </div>
         </div>
-        <div class="player-1-container player-container">
-          <h2 class="player-two-name player-name">Test</h2>
+        <div class="player-two-container player-container">
+          <h2 class="player-name">Player 2:</h2>
+          <form id="player-2" class="form-player">
+            <div>
+              <label for="player-two-name">Name:</label>
+              <input
+                type="text"
+                name="player-name"
+                id="player-two-name"
+                placeholder="Jay"
+                required
+                maxlength="14"
+              />
+            </div>
+            <div>
+              <label for="computer-checkbox">Computer:</label>
+              <input
+                type="checkbox"
+                name="is-computer"
+                id="computer-checkbox"
+              />
+            </div>
+          </form>
         </div>
       </div>
     </main>
