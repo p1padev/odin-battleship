@@ -3,9 +3,6 @@ import {
   PlayerFactory,
 } from '../factories/player/PlayerFactory';
 
-const playerOneDOM = document.querySelector('.player-one-container');
-const playerTwoDOM = document.querySelector('.player-two-container');
-
 const createFactory = (
   player,
   playerDOMBoard,
@@ -14,6 +11,7 @@ const createFactory = (
 ) =>
   player.isComputer
     ? ComputerFactory({
+        playerName: player.playerName,
         DOMBoard: playerDOMBoard,
         enemyDOMBoard,
         isFacingComputer,
@@ -25,6 +23,9 @@ const createFactory = (
       });
 
 const createPlayers = ({ playersForm: { player1, player2 } }) => {
+  const playerOneDOM = document.querySelector('.player-1-container');
+  const playerTwoDOM = document.querySelector('.player-2-container');
+
   const player1Factory = createFactory(
     player1,
     playerOneDOM,

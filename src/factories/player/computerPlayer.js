@@ -37,9 +37,21 @@ const triggerAttack = (cell) => {
   cell.dispatchEvent(new Event('click'));
 };
 
-const computerPlayer = (state) => ({
-  computerAttack: () =>
-    pipeline(getRandomCoordinates, pickCell, triggerAttack)(state),
-});
+const computerPlayer = (state) => {
+  const computerAttack = () =>
+    pipeline(getRandomCoordinates, pickCell, triggerAttack)(state);
+
+  const toggleIsAttacking = () => {
+    state.isAttacking = !state.isAttacking;
+    if (state.isAttacking) {
+      setTimeout(computerAttack, 1000);
+    }
+  };
+
+  return {
+    computerAttack,
+    toggleIsAttacking,
+  };
+};
 
 export default computerPlayer;

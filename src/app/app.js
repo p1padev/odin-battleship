@@ -1,4 +1,4 @@
-import handleInitialForm from '../dom/handleInitialForm';
+import InitialForm from '../components/InitialForm';
 import renderEnemyBoard from '../dom/renderEnemyBoard';
 import renderPlayerBoard from '../dom/renderPlayerBoard';
 import ShipFactory from '../factories/ship/ShipFactory';
@@ -6,7 +6,6 @@ import pipeline from '../helper';
 import createPlayers from './createPlayers';
 
 const gameContainer = document.querySelector('#game-container');
-const startButton = document.getElementById('game-start-btn');
 
 // FIXME: Temporary
 
@@ -39,14 +38,6 @@ const App = () => {
   const togglePlayerTurn = () => {
     players.forEach((player) => {
       player.toggleIsAttacking();
-    });
-  };
-
-  const checkForComputerAttack = () => {
-    players.forEach((player) => {
-      if (player.isComputer() && player.isAttacking()) {
-        setTimeout(() => player.computerAttack(), 1000);
-      }
     });
   };
 
@@ -87,11 +78,7 @@ const App = () => {
     players[0].toggleIsAttacking();
   };
 
-  const switchTurnPipeline = pipeline(
-    togglePlayerTurn,
-    renderBoards,
-    checkForComputerAttack
-  );
+  const switchTurnPipeline = pipeline(togglePlayerTurn, renderBoards);
 
   const gameEndedPipeline = pipeline(checkWhoWon, winningMessage);
 
@@ -100,19 +87,16 @@ const App = () => {
     createPlayers,
     startSetupMode,
     fakeInserts,
-    renderBoards,
-    checkForComputerAttack
+    renderBoards
   );
 
   const init = () => {
+    const [startButton, playerOneForm, playerTwoForm] =
+      InitialForm(enterSetupMode);
     gameContainer.addEventListener('switchTurn', switchTurnPipeline);
     gameContainer.addEventListener('gameEnded', gameEndedPipeline);
-    startButton.addEventListener('click', (event) => {
-      const playersForm = handleInitialForm(event);
-      if (playersForm) {
-        enterSetupMode({ event, playersForm });
-      }
-    });
+    gameContainer.classList.add('player-initial-form');
+    gameContainer.append(startButton, playerOneForm, playerTwoForm);
   };
 
   return {
