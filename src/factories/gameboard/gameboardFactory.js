@@ -19,10 +19,10 @@ const GameboardFactory = () => {
 
   const checkBoundaries = ({
     coordinates: [coordX, coordY] = [],
-    ...args
+    ...rest
   } = {}) => {
     if (isValidCoordinate(coordX) && isValidCoordinate(coordY)) {
-      return { coordX, coordY, ...args };
+      return { coordX, coordY, ...rest };
     }
     throw new Error('Invalid coordinates');
   };
@@ -52,7 +52,7 @@ const GameboardFactory = () => {
     return input;
   };
 
-  const organizeIndices = ({ coordX, coordY, isVertical, ship, ...args }) => {
+  const organizeIndices = ({ coordX, coordY, isVertical, ship, ...rest }) => {
     const indicesForInsertion = [];
 
     for (let i = 0; i < ship.length; i += 1) {
@@ -63,10 +63,10 @@ const GameboardFactory = () => {
       }
     }
 
-    return { indicesForInsertion, ship, ...args };
+    return { indicesForInsertion, ship, ...rest };
   };
 
-  const checkOverlapping = ({ indicesForInsertion, ...args }) => {
+  const checkOverlapping = ({ indicesForInsertion, ...rest }) => {
     const isOverlapping = indicesForInsertion.some(
       ([boardXCoord, boardYCoord]) => board[boardXCoord][boardYCoord] !== null
     );
@@ -75,7 +75,7 @@ const GameboardFactory = () => {
       throw new Error("This will overlap a ship that's already in the board");
     }
 
-    return { indicesForInsertion, ...args };
+    return { indicesForInsertion, ...rest };
   };
 
   const placeShip = ({ indicesForInsertion, ship }) => {

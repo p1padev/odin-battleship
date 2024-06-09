@@ -2,7 +2,7 @@ const disableCell = ({
   cell,
   wasShipHitted = false,
   missedShot = false,
-  ...args
+  ...rest
 }) => {
   const newCell = cell;
   newCell.disabled = true;
@@ -14,7 +14,7 @@ const disableCell = ({
   if (missedShot) {
     newCell.classList.add('missed-shot');
   }
-  return { cell: newCell, ...args };
+  return { cell: newCell, ...rest };
 };
 
 export default disableCell;

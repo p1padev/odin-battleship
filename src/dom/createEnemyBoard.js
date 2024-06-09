@@ -1,10 +1,14 @@
 import basicBoard from '../components/basicBoard';
-import handleEnemyCell from './handleEnemyCell';
+import createEnemyBoardCell from './createEnemyBoardCell';
 
-const createEnemyBoard = ({ boardController, isFacingComputer, ...args }) => {
-  const board = basicBoard(boardController, handleEnemyCell(isFacingComputer));
+const createEnemyBoard = ({ boardController, isFacingComputer, ...rest }) => {
+  const board = basicBoard(
+    boardController,
+    createEnemyBoardCell(isFacingComputer)
+  );
+
   board.classList.add('enemy');
-  return { board, ...args };
+  return { board, ...rest };
 };
 
 export default createEnemyBoard;

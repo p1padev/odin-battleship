@@ -15,6 +15,12 @@ html {
   font-size: 10px;
 }
 
+@media screen and (max-width: 480px) {
+  html {
+    font-size: 12px;
+  }
+}
+
 body {
   background-color: var(--color-light-grey);
   min-height: calc(100vh - 4rem);
@@ -163,7 +169,9 @@ button:not(.board-cell):hover {
   cursor: pointer;
 }
 
-.board-cell:hover {
+.board-cell:not(.prompt-cell):hover,
+.board-cell.selected,
+.board-cell.touched {
   background-color: var(--color-accent);
 }
 
@@ -230,4 +238,84 @@ button:not(.board-cell):hover {
   border-radius: 8px;
   padding: 0.5rem 1rem;
   border: 1px solid var(--color-text);
+}
+
+.popup {
+  background: hsla(0, 0%, 30%, 0.5);
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  transition: all 0.25s;
+  top: 0;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  --opacity: 0;
+  opacity: var(--opacity);
+  grid-template-columns: 80%;
+}
+
+.popup.open {
+  --opacity: 1;
+  pointer-events: all;
+}
+
+.popup-wrapper {
+  background-color: white;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+@media screen and (max-width: 768px) {
+  .popup-wrapper {
+    padding: 1rem;
+  }
+  .popup {
+    grid-template-columns: 95%;
+  }
+}
+
+.popup .board {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup .buttons-container {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.popup .buttons-container button {
+  font-size: 1.5rem;
+  font-weight: 600;
+  min-width: 100px;
+  padding: 1rem 2rem;
+}
+
+.popup button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.popup-player-name {
+  font-size: 2.4rem;
+}
+
+.popup-player-name + p {
+  font-size: 1.8rem;
+}
+
+.popup-player-name + p .strong {
+  font-weight: 700;
 }

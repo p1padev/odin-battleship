@@ -3,17 +3,17 @@ import disableCell from './disableCell';
 
 const gameContainer = document.querySelector('#game-container');
 
-const dispatchAttack = ({ coordinates, boardController, ...args }) => {
+const dispatchAttack = ({ coordinates, boardController, ...rest }) => {
   const wasShipHitted = boardController.receiveAttack({
     coordinates,
   });
 
-  return { wasShipHitted, boardController, ...args };
+  return { wasShipHitted, boardController, ...rest };
 };
 
-const dispatchEvent = ({ ...args }) => {
+const dispatchEvent = (settings) => {
   gameContainer.dispatchEvent(switchTurnEvent);
-  return { ...args };
+  return settings;
 };
 
 const dispatchWinning = ({ boardController }) => {

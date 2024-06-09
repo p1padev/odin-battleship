@@ -1,10 +1,10 @@
 import basicBoard from '../components/basicBoard';
-import handlePlayerCell from './handlePlayerCell';
+import createPlayerBoardCell from './createPlayerBoardCell';
 
-const createPlayerBoard = ({ boardController, ...args }) => {
-  const board = basicBoard(boardController, handlePlayerCell);
+const createPlayerBoard = ({ boardController, isComputer, ...rest }) => {
+  const board = basicBoard(boardController, createPlayerBoardCell(isComputer));
   board.classList.add('player');
-  return { board, ...args };
+  return { board, ...rest };
 };
 
 export default createPlayerBoard;

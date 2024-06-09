@@ -19,4 +19,19 @@ export const containsCoordinates = (containerArray) => (cellCoordinates) =>
     coordinates.every((val, index) => val === cellCoordinates[index])
   );
 
+export const containsShip = (cell) => cell.classList.contains('player-ship');
+
+export const getCoordinates = (cell) => JSON.parse(cell.dataset.coordinates);
+
+export const isOutOfBoundaries = (cell, shipLength, getIsVertical) => {
+  const [x, y] = getCoordinates(cell);
+  if (
+    (getIsVertical() && x + shipLength > 10) ||
+    (!getIsVertical() && y + shipLength > 10)
+  ) {
+    return true;
+  }
+  return false;
+};
+
 export default pipeline;

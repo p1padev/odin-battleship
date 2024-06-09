@@ -3,7 +3,7 @@ import EnemyCell from '../components/EnemyCell';
 import PCEnemyCell from '../components/PCEnemyCell';
 import checkers from './checkers';
 
-const handleEnemyCell =
+const createEnemyBoardCell =
   (isFacingComputer) =>
   ({ coordinates, boardController }) => {
     const settings = { coordinates, boardController };
@@ -27,4 +27,4 @@ const handleEnemyCell =
     return EnemyCell(settings);
   };
 
-export default handleEnemyCell;
+export default createEnemyBoardCell;
