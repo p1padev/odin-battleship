@@ -6,7 +6,13 @@ const PromptBoard = (player, ship) =>
     const boardController = player.getController();
     const playerName = player.getName();
     const shipLength = ship.length;
-    const popup = Popup(playerName, shipLength);
+    const popup = Popup();
+    popup.querySelector('.popup-wrapper').insertAdjacentHTML(
+      'afterbegin',
+      `<h2 class="popup-player-name">${playerName}</h2>
+      <p>Inserting ship of length: <span class="strong">${shipLength}</span></p>
+      `
+    );
     const board = createPromptBoard(
       { popup, resolve },
       boardController,

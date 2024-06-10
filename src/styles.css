@@ -319,3 +319,16 @@ button:not(.board-cell):hover {
 .popup-player-name + p .strong {
   font-weight: 700;
 }
+
+.popup.dark {
+  background: rgba(77, 77, 77, 1);
+}
+
+.popup-pass-turn .popup-wrapper {
+  gap: 15px;
+}
+
+.popup-pass-turn .cta-text {
+  font-weight: 500;
+  font-size: 1.4rem;
+}

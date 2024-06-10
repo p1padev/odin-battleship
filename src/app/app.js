@@ -1,9 +1,14 @@
 import InitialForm from '../components/InitialForm';
 import PromptBoard from '../components/PromptBoard';
+import passTurn from '../components/passTurn';
 import handleInitialForm from '../dom/handleInitialForm';
 import renderEnemyBoard from '../dom/renderEnemyBoard';
 import renderPlayerBoard from '../dom/renderPlayerBoard';
-import pipeline, { clearChildren, containsCoordinates } from '../helper';
+import pipeline, {
+  asyncPipeline,
+  clearChildren,
+  getRandomSettings,
+} from '../helper';
 import createPlayers from './createPlayers';
 import defaultShips from './defaultShips';
 
@@ -22,10 +27,22 @@ const App = () => {
     });
   };
 
-  const togglePlayerTurn = () => {
+  const togglePlayerTurn = async () => {
+    let wasAttacking;
+    let awaitingToAttack;
+
     players.forEach((player) => {
-      player.toggleIsAttacking();
+      const booleanState = player.isAttacking();
+      if (booleanState) {
+        wasAttacking = player;
+      } else {
+        awaitingToAttack = player;
+      }
     });
+
+    await passTurn(wasAttacking, awaitingToAttack);
+    wasAttacking.toggleIsAttacking();
+    awaitingToAttack.toggleIsAttacking();
   };
 
   const checkWhoWon = () => {
@@ -45,6 +62,9 @@ const App = () => {
     alert(`${won.getName()} has won ${lost.getName()}`);
   };
 
+  const switchTurnPipeline = asyncPipeline(togglePlayerTurn, renderBoards);
+  const gameEndedPipeline = pipeline(checkWhoWon, winningMessage);
+
   const removeFormUI = ({ event, ...rest }) => {
     gameContainer.classList.remove('player-initial-form');
     event.target.remove();
@@ -54,57 +74,15 @@ const App = () => {
     return { ...rest };
   };
 
-  const switchTurnPipeline = pipeline(togglePlayerTurn, renderBoards);
-  const gameEndedPipeline = pipeline(checkWhoWon, winningMessage);
+  const assignPlayers = (ArrayOfPlayers) => {
+    players = ArrayOfPlayers;
+  };
 
   const initGame = () => {
     gameContainer.addEventListener('switchTurn', switchTurnPipeline);
     gameContainer.addEventListener('gameEnded', gameEndedPipeline);
     players[0].toggleIsAttacking();
     renderBoards();
-  };
-
-  const assignPlayers = (ArrayOfPlayers) => {
-    players = ArrayOfPlayers;
-  };
-
-  const getRandomSettings = (alreadyUsedCoordinates, shipLength) => {
-    const alreadyUsedChecker = containsCoordinates(alreadyUsedCoordinates);
-
-    const randomVertical = Boolean(Math.floor(Math.random() * 2));
-    let x;
-    let y;
-    if (randomVertical) {
-      x = Math.floor(Math.random() * (10 - shipLength));
-      y = Math.floor(Math.random() * 10);
-    } else {
-      x = Math.floor(Math.random() * 10);
-      y = Math.floor(Math.random() * (10 - shipLength));
-    }
-    const randomShipCoordinates = [];
-
-    for (let i = 0; i < shipLength; i += 1) {
-      if (randomVertical) {
-        randomShipCoordinates.push([x + i, y]);
-      } else {
-        randomShipCoordinates.push([x, y + i]);
-      }
-    }
-
-    const checkers = randomShipCoordinates.map((coordinates) =>
-      alreadyUsedChecker(coordinates)
-    );
-
-    const appliedCheckers = checkers.some((value) => value === true);
-
-    if (appliedCheckers) {
-      return getRandomSettings(alreadyUsedCoordinates, shipLength);
-    }
-
-    return {
-      coordinates: [Number(x), Number(y)],
-      isVertical: randomVertical,
-    };
   };
 
   const startSetupMode = async () => {
@@ -129,14 +107,14 @@ const App = () => {
         playerBoard.insertShip(settingsOfShip);
       }
     }
-    initGame();
   };
 
-  const enterSetupMode = pipeline(
+  const enterSetupMode = asyncPipeline(
     removeFormUI,
     createPlayers,
     assignPlayers,
-    startSetupMode
+    startSetupMode,
+    initGame
   );
 
   const handleStartButton = (event) => {
