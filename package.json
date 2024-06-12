@@ -8,7 +8,8 @@
     "test:watch": "jest --watch --roots src",
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --watch --config webpack.dev.js",
-    "start": "webpack serve --open --config webpack.dev.js"
+    "start": "webpack serve --open --config webpack.dev.js",
+    "deploy": "gh-pages -d dist"
   },
   "author": "João Ferraz (@p1padev)",
   "license": "ISC",
@@ -25,6 +26,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^28.5.0",
+    "gh-pages": "^6.1.1",
     "globals": "^15.3.0",
     "html-webpack-plugin": "^5.6.0",
     "jest": "^29.7.0",
