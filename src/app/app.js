@@ -1,14 +1,11 @@
 import InitialForm from '../components/InitialForm';
 import PromptBoard from '../components/PromptBoard';
 import passTurn from '../components/passTurn';
+import victoryPopup from '../components/victoryPopup';
 import handleInitialForm from '../dom/handleInitialForm';
 import renderEnemyBoard from '../dom/renderEnemyBoard';
 import renderPlayerBoard from '../dom/renderPlayerBoard';
-import pipeline, {
-  asyncPipeline,
-  clearChildren,
-  getRandomSettings,
-} from '../helper';
+import { asyncPipeline, clearChildren, getRandomSettings } from '../helper';
 import createPlayers from './createPlayers';
 import defaultShips from './defaultShips';
 
@@ -30,8 +27,12 @@ const App = () => {
   const togglePlayerTurn = async () => {
     let wasAttacking;
     let awaitingToAttack;
+    let cancel;
 
     players.forEach((player) => {
+      if (player.getController().areAllShipsSunk()) {
+        cancel = true;
+      }
       const booleanState = player.isAttacking();
       if (booleanState) {
         wasAttacking = player;
@@ -40,30 +41,17 @@ const App = () => {
       }
     });
 
+    if (cancel) {
+      return null;
+    }
+
     await passTurn(wasAttacking, awaitingToAttack);
     wasAttacking.toggleIsAttacking();
     awaitingToAttack.toggleIsAttacking();
-  };
-
-  const checkWhoWon = () => {
-    let won;
-    let lost;
-    players.forEach((player) => {
-      if (player.getController().areAllShipsSunk()) {
-        lost = player;
-      } else {
-        won = player;
-      }
-    });
-    return { won, lost };
-  };
-
-  const winningMessage = ({ won, lost }) => {
-    alert(`${won.getName()} has won ${lost.getName()}`);
+    return true;
   };
 
   const switchTurnPipeline = asyncPipeline(togglePlayerTurn, renderBoards);
-  const gameEndedPipeline = pipeline(checkWhoWon, winningMessage);
 
   const removeFormUI = ({ event, ...rest }) => {
     gameContainer.classList.remove('player-initial-form');
@@ -76,13 +64,6 @@ const App = () => {
 
   const assignPlayers = (ArrayOfPlayers) => {
     players = ArrayOfPlayers;
-  };
-
-  const initGame = () => {
-    gameContainer.addEventListener('switchTurn', switchTurnPipeline);
-    gameContainer.addEventListener('gameEnded', gameEndedPipeline);
-    players[0].toggleIsAttacking();
-    renderBoards();
   };
 
   const startSetupMode = async () => {
@@ -109,12 +90,17 @@ const App = () => {
     }
   };
 
+  const startGame = () => {
+    players[0].toggleIsAttacking();
+    renderBoards();
+  };
+
   const enterSetupMode = asyncPipeline(
     removeFormUI,
     createPlayers,
     assignPlayers,
     startSetupMode,
-    initGame
+    startGame
   );
 
   const handleStartButton = (event) => {
@@ -132,8 +118,42 @@ const App = () => {
     gameContainer.append(startButton, playerOneForm, playerTwoForm);
   };
 
+  const checkWhoWon = () => {
+    let won;
+    let lost;
+    players.forEach((player) => {
+      if (player.getController().areAllShipsSunk()) {
+        lost = player;
+      } else {
+        won = player;
+      }
+    });
+    return { won, lost };
+  };
+
+  const winningMessage = async ({ won, lost }) => {
+    await victoryPopup(won, lost);
+  };
+
+  const resetApp = () => {
+    players = null;
+    init();
+  };
+
+  const gameEndedPipeline = asyncPipeline(
+    checkWhoWon,
+    winningMessage,
+    resetApp
+  );
+
+  const addEventListeners = () => {
+    gameContainer.addEventListener('switchTurn', switchTurnPipeline);
+    gameContainer.addEventListener('gameEnded', gameEndedPipeline);
+  };
+
   return {
     init,
+    addEventListeners,
   };
 };
 

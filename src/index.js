@@ -5,4 +5,5 @@ import reset from './reset.css';
 import styles from './styles.css';
 
 const app = App();
+app.addEventListeners();
 app.init();
