@@ -9,6 +9,7 @@
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --watch --config webpack.dev.js",
     "start": "webpack serve --open --config webpack.dev.js",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "author": "João Ferraz (@p1padev)",
