@@ -12,22 +12,6 @@ I believe this project particularly explains a lot about my ongoing journey as a
 
 In the end, I believe this was 100% a "laboratory" for me and my skills. There are many things I would do differently now, but I only know this after going through the process of trial and error. Doing all of this using only vanilla JS, Jest, and core libraries for modern web development was a game-changer. Using only the basics with up-to-date syntax (ES6+) was particularly enlightening. I think an important step for me in the future is to come back here to evaluate what I've done, understand my thought processes, and identify areas for improvement and things that, by then, I have already improved (one key area I'm considering right now is code architecture).
 
-## Installation and Setup
-
-1. Clone the repository:
-   ```
-   git clone https://github.com/p1padev/odin-battleship.git
-   ```
-2. Navigate to the project directory:
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Run the project:
-   ```bash
-   npm run start
-   ```
-
 ## Features
 
 - Player vs. Player gameplay
